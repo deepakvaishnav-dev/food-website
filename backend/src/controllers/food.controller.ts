@@ -49,10 +49,7 @@ export const getFoods = async (
   const foods = await Food.find(filter).sort(sort).skip(skip).limit(limit);
   const total = await Food.countDocuments(filter);
 
-  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.setHeader("Pragma", "no-cache");
-  res.setHeader("Expires", "0");
-
+  
   res.json({
     data: foods,
     totalPages: Math.ceil(total / limit),
