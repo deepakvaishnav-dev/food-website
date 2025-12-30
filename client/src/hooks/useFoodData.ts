@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import type { Food } from "../types/food";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const useFoodData = () => {
   const [foods, setFoods] = useState<Food[]>([]);
@@ -20,11 +20,13 @@ export const useFoodData = () => {
       const response = await axios.get(`${API_BASE_URL}/api/foods`, {
         params,
       });
-      setFoods(response.data.data);
-      setTotalPages(response.data.totalPages);
+      setFoods(response.data.data || []);
+      setTotalPages(response.data.totalPages || 1);
       setLoading(false);
     } catch {
       setError("Failed to fetch foods");
+      setFoods([]);
+      setTotalPages(1);
       setLoading(false);
     }
   };

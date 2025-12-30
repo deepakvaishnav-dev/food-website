@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import axios, { AxiosError } from "axios";
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -21,19 +24,26 @@ const Login: React.FC = () => {
     setError("");
     setLoading(true);
 
-    setTimeout(() => {
-      alert(`Login attempted with email: ${formData.email}`);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        formData
+      );
+      localStorage.setItem("token", response.data.token);
+      navigate("/");
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError<{ message: string }>;
+      setError(axiosError.response?.data?.message || "Login failed");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center">
       <Card className="w-95 rounded-2xl shadow-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold">
-            Sign In
-          </CardTitle>
+          <CardTitle className="text-2xl font-semibold">Sign In</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -56,15 +66,9 @@ const Login: React.FC = () => {
               required
             />
 
-            {error && (
-              <p className="text-sm text-red-500">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Loading..." : "Sign In"}
             </Button>
           </form>

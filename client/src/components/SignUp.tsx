@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
@@ -8,12 +9,14 @@ import {
   CardContent,
   CardFooter,
 } from "./ui/card";
+import axios, { AxiosError } from "axios";
 
 interface SignUpProps {
   onClose: () => void;
 }
 
 const SignUp: React.FC<SignUpProps> = ({ onClose }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,19 +40,29 @@ const SignUp: React.FC<SignUpProps> = ({ onClose }) => {
       return;
     }
 
-    setTimeout(() => {
-      alert(`Sign Up attempted with email: ${formData.email}`);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+      console.log(response);
+      navigate("/login");
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError<{ message: string }>;
+      setError(axiosError.response?.data?.message || "Sign Up failed");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center">
       <Card className="w-96 rounded-2xl shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold">
-            Sign Up
-          </CardTitle>
+          <CardTitle className="text-2xl font-semibold">Sign Up</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -81,27 +94,16 @@ const SignUp: React.FC<SignUpProps> = ({ onClose }) => {
               required
             />
 
-            {error && (
-              <p className="text-sm text-red-500">
-                {error}
-              </p>
-            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Loading..." : "Sign Up"}
             </Button>
           </form>
         </CardContent>
 
         <CardFooter className="flex justify-end">
-          <Button
-            variant="secondary"
-            onClick={onClose}
-          >
+          <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
         </CardFooter>
