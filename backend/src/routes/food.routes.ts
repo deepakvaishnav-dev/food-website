@@ -1,8 +1,8 @@
-const { Router } = require("express");
-const { getFoods } = require("../controllers/food.controller");
+import { Router } from "express";
+import { getFoods } from "../controllers/food.controller";
 
 const router = Router();
 
-router.get("/foods", getFoods);
+router.get("/", getFoods);
 
-module.exports = router;
+export default router;

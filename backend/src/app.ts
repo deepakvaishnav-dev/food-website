@@ -1,9 +1,11 @@
-const express = require("express");
-const foodRoutes = require("./routes/food.routes");
+import express from "express";
+import cors from "cors";
+import foodRoutes from "./routes/food.routes";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
-app.use("/api", foodRoutes);
+app.use("/api/foods", foodRoutes);
 
-module.exports = app;
+export default app;
