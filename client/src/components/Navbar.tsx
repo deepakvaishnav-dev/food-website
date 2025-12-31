@@ -7,14 +7,21 @@ import {
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import logo from "../assets/Haldiram's_Logo_SVG.svg.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth();
 
   const handleClick = (section: string) => {
     if (section === "login") navigate("/login");
     else if (section === "signup") navigate("/signup");
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
 
   return (
@@ -71,10 +78,21 @@ const Navbar = () => {
 
             {/* Auth Buttons */}
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={() => handleClick("login")}>
-                Login
-              </Button>
-              <Button onClick={() => handleClick("signup")}>Sign Up</Button>
+              {isLoggedIn ? (
+                <Button variant="outline" onClick={handleLogout}>
+                  Logout
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleClick("login")}
+                  >
+                    Login
+                  </Button>
+                  <Button onClick={() => handleClick("signup")}>Sign Up</Button>
+                </>
+              )}
             </div>
 
             {/* Theme Toggle */}

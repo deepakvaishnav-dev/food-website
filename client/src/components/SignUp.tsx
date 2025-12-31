@@ -10,6 +10,7 @@ import {
   CardFooter,
 } from "./ui/card";
 import axios, { AxiosError } from "axios";
+import {toast } from "sonner";
 
 interface SignUpProps {
   onClose: () => void;
@@ -35,6 +36,7 @@ const SignUp: React.FC<SignUpProps> = ({ onClose }) => {
     setLoading(true);
 
     if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
       setError("Passwords do not match");
       setLoading(false);
       return;
@@ -49,6 +51,7 @@ const SignUp: React.FC<SignUpProps> = ({ onClose }) => {
         }
       );
       console.log(response);
+      toast.success("Account created successfully 🎉");
       navigate("/login");
     } catch (err: unknown) {
       const axiosError = err as AxiosError<{ message: string }>;
