@@ -7,6 +7,9 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
+import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
+import { toast } from "sonner";
 
 interface Food {
   _id: string;
@@ -25,6 +28,23 @@ interface FoodCardProps {
 }
 
 const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
+  const { addToCart, loading } = useCart();
+  const { isLoggedIn } = useAuth();
+
+  const handleAddToCart = async () => {
+    if (!isLoggedIn) {
+      toast.error("Please login to add items to cart");
+      return;
+    }
+
+    try {
+      await addToCart(food);
+      toast.success(`${food.name} added to cart`);
+    } catch {
+      toast.error("Failed to add item to cart");
+    }
+  };
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -66,9 +86,10 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
         {food.isAvailable && (
           <Button
             className="w-full mt-4"
-            onClick={() => alert(`Added ${food.name} to cart`)}
+            onClick={handleAddToCart}
+            disabled={loading}
           >
-            Add to Cart
+            {loading ? "Adding..." : "Add to Cart"}
           </Button>
         )}
       </CardContent>

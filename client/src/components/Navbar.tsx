@@ -8,11 +8,18 @@ import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
+import { ShoppingCart } from "lucide-react";
+import { Badge } from "../components/ui/badge";
+import CartDialog from "./CartDialog";
+import { useState } from "react";
 import logo from "../assets/Haldiram's_Logo_SVG.svg.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { isLoggedIn, logout } = useAuth();
+  const { cart } = useCart();
+  const [cartDialogOpen, setCartDialogOpen] = useState(false);
 
   const handleClick = (section: string) => {
     if (section === "login") navigate("/login");
@@ -76,6 +83,21 @@ const Navbar = () => {
               </NavigationMenuList>
             </NavigationMenu>
 
+            {/* Cart Icon */}
+            {isLoggedIn && (
+              <div className="relative">
+                <ShoppingCart
+                  className="h-6 w-6 cursor-pointer"
+                  onClick={() => setCartDialogOpen(true)}
+                />
+                {cart.length > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {cart.length}
+                  </Badge>
+                )}
+              </div>
+            )}
+
             {/* Auth Buttons */}
             <div className="flex items-center gap-2">
               {isLoggedIn ? (
@@ -100,6 +122,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <CartDialog open={cartDialogOpen} onOpenChange={setCartDialogOpen} />
     </nav>
   );
 };

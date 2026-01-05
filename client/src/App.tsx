@@ -7,6 +7,7 @@ import SignUp from "@/components/SignUp";
 import Home from "@/components/Home";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
 
 function App() {
   const handleSignUpClose = () => {};
@@ -33,7 +34,9 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <AuthProvider>
-        <AppContent />
+        <CartProvider>
+          <AppContent />
+        </CartProvider>
       </AuthProvider>
     </ThemeProvider>
   );

@@ -3,8 +3,12 @@ import { connectDB } from "./config/database";
 import * as dotenv from "dotenv";
 
 dotenv.config();
-connectDB();
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
+const startServer = async () => {
+  await connectDB();
+  app.listen(5000, () => {
+    console.log("Server running on port 5000");
+  });
+};
+
+startServer();

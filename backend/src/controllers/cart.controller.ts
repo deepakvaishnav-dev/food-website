@@ -1,0 +1,132 @@
+import { Request, Response } from "express";
+import { Cart, ICartItem } from "../models/cart.model";
+
+export const getCart = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.json({ items: [], totalPrice: 0 });
+    }
+
+    res.json({ items: cart.items, totalPrice: cart.totalPrice });
+  } catch (error) {
+    console.error("Error in getCart:", error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: (error as Error).toString() });
+  }
+};
+
+export const addToCart = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const { foodId, name, price, quantity, image } = req.body;
+
+    // Validation
+    if (!foodId || !name || typeof price !== "number" || price < 0 || !image) {
+      return res.status(400).json({ message: "Invalid item data" });
+    }
+
+    const qty = quantity && quantity > 0 ? quantity : 1;
+
+    // Find cart or create new
+    let cart = await Cart.findOne({ userId });
+    if (!cart) cart = new Cart({ userId, items: [] });
+
+    // Check if item exists
+    const existingItem = cart.items.find((item) => item.foodId === foodId);
+
+    if (existingItem) {
+      existingItem.quantity += qty;
+    } else {
+      cart.items.push({ foodId, name, price, quantity: qty, image });
+    }
+
+    // Save cart (pre-save hook updates totalPrice)
+    await cart.save();
+
+    res.json({ items: cart.items, totalPrice: cart.totalPrice });
+  } catch (error) {
+    console.error("Error in addToCart:", error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: (error as Error).toString() });
+  }
+};
+
+export const updateCartItem = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const { foodId } = req.params;
+    const { quantity } = req.body;
+
+    if (typeof quantity !== "number" || quantity <= 0) {
+      return res.status(400).json({ message: "Invalid quantity" });
+    }
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    const item = cart.items.find((item) => item.foodId === foodId);
+    if (!item)
+      return res.status(404).json({ message: "Item not found in cart" });
+
+    item.quantity = quantity;
+    await cart.save();
+
+    res.json({ items: cart.items, totalPrice: cart.totalPrice });
+  } catch (error) {
+    console.error("Error in updateCartItem:", error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: (error as Error).toString() });
+  }
+};
+
+export const removeFromCart = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const { foodId } = req.params;
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    cart.items = cart.items.filter((item) => item.foodId !== foodId);
+    await cart.save();
+
+    res.json({ items: cart.items, totalPrice: cart.totalPrice });
+  } catch (error) {
+    console.error("Error in removeFromCart:", error);
+    res.status(500).json({ message: "Server error", error: (error as Error).toString() });
+  }
+};
+
+export const clearCart = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    cart.items = [];
+    cart.totalPrice = 0;
+    await cart.save();
+
+    res.json({ items: [], totalPrice: 0 });
+  } catch (error) {
+    console.error("Error in clearCart:", error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: (error as Error).toString() });
+  }
+};
