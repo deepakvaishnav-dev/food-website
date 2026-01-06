@@ -14,10 +14,19 @@ import { Badge } from "../components/ui/badge";
 import CartDialog from "./CartDialog";
 import { useState } from "react";
 import logo from "../assets/Haldiram's_Logo_SVG.svg.png";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
   const { cart } = useCart();
   const [cartDialogOpen, setCartDialogOpen] = useState(false);
 
@@ -64,20 +73,26 @@ const Navbar = () => {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuLink
-                    className="px-3 py-2 rounded-md text-sm font-medium 
-                    text-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                  >
-                    About
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/about"
+                      className="px-3 py-2 rounded-md text-sm font-medium
+                      text-foreground hover:bg-accent hover:text-accent-foreground"
+                    >
+                      About
+                    </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuLink
-                    className="px-3 py-2 rounded-md text-sm font-medium 
-                    text-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                  >
-                    Contact
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/contact"
+                      className="px-3 py-2 rounded-md text-sm font-medium
+                    text-foreground hover:bg-accent hover:text-accent-foreground"
+                    >
+                      Contact
+                    </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>
@@ -100,10 +115,39 @@ const Navbar = () => {
 
             {/* Auth Buttons */}
             <div className="flex items-center gap-2">
-              {isLoggedIn ? (
-                <Button variant="outline" onClick={handleLogout}>
-                  Logout
-                </Button>
+              {isLoggedIn && user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full"
+                    >
+                      <Avatar>
+                        <AvatarImage
+                          src="https://github.com/shadcn.png"
+                          alt="@shadcn"
+                        />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {user.name}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <>
                   <Button

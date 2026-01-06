@@ -5,6 +5,8 @@ import { ThemeProvider } from "./components/theme-provider";
 import Login from "@/components/Login";
 import SignUp from "@/components/SignUp";
 import Home from "@/components/Home";
+import About from "@/components/About";
+import Contact from "@/components/Contact";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
@@ -25,6 +27,8 @@ function App() {
             path="/signup"
             element={<SignUp onClose={handleSignUpClose} />}
           />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
         <Toaster />
       </>

@@ -64,11 +64,10 @@ export const updateCartItem = async (req: Request, res: Response) => {
     const userId = (req as any).user?.id;
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-    const { foodId } = req.params;
-    const { quantity } = req.body;
+    const { foodId, quantity } = req.body;
 
-    if (typeof quantity !== "number" || quantity <= 0) {
-      return res.status(400).json({ message: "Invalid quantity" });
+    if (!foodId || typeof quantity !== "number" || quantity <= 0) {
+      return res.status(400).json({ message: "Invalid foodId or quantity" });
     }
 
     const cart = await Cart.findOne({ userId });
@@ -106,7 +105,9 @@ export const removeFromCart = async (req: Request, res: Response) => {
     res.json({ items: cart.items, totalPrice: cart.totalPrice });
   } catch (error) {
     console.error("Error in removeFromCart:", error);
-    res.status(500).json({ message: "Server error", error: (error as Error).toString() });
+    res
+      .status(500)
+      .json({ message: "Server error", error: (error as Error).toString() });
   }
 };
 
