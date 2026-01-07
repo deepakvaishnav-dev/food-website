@@ -34,6 +34,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) throw new Error("useCart must be used within a CartProvider");
@@ -66,6 +67,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   useEffect(() => {
     fetchCart();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const addToCart = async (food: Food) => {
@@ -120,14 +122,17 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (!token) return;
     setLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/cart/update`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ foodId, quantity }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/cart/update`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ foodId, quantity }),
+        }
+      );
       const data = await res.json();
       if (res.ok) setCart(data.items || []);
       else if (res.status === 401) logout();
@@ -142,27 +147,47 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const clearCart = async () => {
     if (!token) return;
     setLoading(true);
+    setCart([]); // Clear local state immediately
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/cart/clear`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/cart/clear`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await res.json();
-      if (res.ok) setCart([]);
-      else if (res.status === 401) logout();
-      else console.error("Clear cart error:", data);
+      if (!res.ok) {
+        if (res.status === 401) logout();
+        else console.error("Clear cart error:", data);
+        // Optionally refetch cart if clear failed
+        fetchCart();
+      }
     } catch (err) {
       console.error("Failed to clear cart:", err);
+      // Optionally refetch cart if clear failed
+      fetchCart();
     } finally {
       setLoading(false);
     }
   };
 
-  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalPrice = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, totalPrice, loading }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        totalPrice,
+        loading,
+      }}
     >
       {children}
     </CartContext.Provider>

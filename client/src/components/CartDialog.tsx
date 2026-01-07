@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import {
   Dialog,
@@ -18,6 +19,7 @@ interface CartDialogProps {
 
 const CartDialog: React.FC<CartDialogProps> = ({ open, onOpenChange }) => {
   const { cart, totalPrice, removeFromCart, updateQuantity } = useCart();
+  const navigate = useNavigate();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -89,7 +91,14 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onOpenChange }) => {
           <DialogFooter>
             <div className="flex justify-between w-full">
               <p className="font-semibold">Total: ₹{totalPrice.toFixed(2)}</p>
-              <Button>Checkout</Button>
+              <Button
+                onClick={() => {
+                  onOpenChange(false);
+                  navigate("/checkout");
+                }}
+              >
+                Checkout
+              </Button>
             </div>
           </DialogFooter>
         )}

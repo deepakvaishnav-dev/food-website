@@ -7,6 +7,8 @@ import SignUp from "@/components/SignUp";
 import Home from "@/components/Home";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
+import CheckoutPage from "@/components/CheckoutPage";
+import OrderSuccessPage from "@/components/OrderSuccessPage";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
@@ -29,6 +31,8 @@ function App() {
           />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order-success" element={<OrderSuccessPage />} />
         </Routes>
         <Toaster />
       </>
