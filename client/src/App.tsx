@@ -12,6 +12,7 @@ import OrderSuccessPage from "@/Page/OrderSuccessPage";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
+import Footer from "./Page/Footer";
 
 function App() {
   const handleSignUpClose = () => {};
@@ -35,6 +36,7 @@ function App() {
           <Route path="/order-success" element={<OrderSuccessPage />} />
         </Routes>
         <Toaster />
+        <Footer />
       </>
     );
   }

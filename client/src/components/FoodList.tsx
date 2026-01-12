@@ -5,6 +5,7 @@ import SortControls from "./SortControls";
 import FoodGrid from "./FoodGrid";
 import PaginationControls from "./PaginationControls";
 
+
 const FoodList: React.FC = () => {
   const {
     foods,
@@ -62,6 +63,8 @@ const FoodList: React.FC = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+
+      
     </div>
   );
 };
