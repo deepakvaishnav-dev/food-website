@@ -67,7 +67,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   useEffect(() => {
     fetchCart();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const addToCart = async (food: Food) => {
@@ -152,7 +152,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/cart/clear`,
         {
-          method: "POST",
+          method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         }
       );

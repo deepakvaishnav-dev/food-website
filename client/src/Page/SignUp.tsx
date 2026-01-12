@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
-} from "./ui/card";
+} from "../components/ui/card";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 

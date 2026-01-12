@@ -85,7 +85,7 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
         </div>
         {food.isAvailable && (
           <Button
-            className="w-full mt-4"
+            className="w-full mt-4 cursor-pointer"
             onClick={handleAddToCart}
             disabled={loading}
           >

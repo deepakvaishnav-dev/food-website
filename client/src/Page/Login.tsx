@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useAuth } from "../contexts/AuthContext";
