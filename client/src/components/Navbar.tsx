@@ -153,10 +153,11 @@ const Navbar = () => {
                   <Button
                     variant="outline"
                     onClick={() => handleClick("login")}
+                    className="cursor-pointer"
                   >
                     Login
                   </Button>
-                  <Button onClick={() => handleClick("signup")}>Sign Up</Button>
+                  <Button onClick={() => handleClick("signup")} className="cursor-pointer">Sign Up</Button>
                 </>
               )}
             </div>

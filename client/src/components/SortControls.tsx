@@ -33,14 +33,14 @@ const SortControls: React.FC<SortControlsProps> = ({
             <SelectValue placeholder="Default" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="default">Default</SelectItem>
-            <SelectItem value="high-to-low">High to Low</SelectItem>
-            <SelectItem value="low-to-high">Low to High</SelectItem>
+            <SelectItem value="default" className="cursor-pointer">Default</SelectItem>
+            <SelectItem value="high-to-low" className="cursor-pointer">High to Low</SelectItem>
+            <SelectItem value="low-to-high" className="cursor-pointer">Low to High</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 ">
         <label className="text-sm font-medium">Sort by Rating:</label>
         <Select
           value={ratingSort}
@@ -50,9 +50,9 @@ const SortControls: React.FC<SortControlsProps> = ({
             <SelectValue placeholder="Default" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="default">Default</SelectItem>
-            <SelectItem value="high-to-low">High to Low</SelectItem>
-            <SelectItem value="low-to-high">Low to High</SelectItem>
+            <SelectItem value="default" className="cursor-pointer" >Default</SelectItem>
+            <SelectItem value="high-to-low" className="cursor-pointer">High to Low</SelectItem>
+            <SelectItem value="low-to-high"className="cursor-pointer">Low to High</SelectItem>
           </SelectContent>
         </Select>
       </div>

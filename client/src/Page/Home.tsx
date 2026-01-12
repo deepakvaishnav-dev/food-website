@@ -16,10 +16,10 @@ const Home: React.FC = () => {
             </p>
 
             <div className="flex justify-center md:justify-start gap-4">
-              <button className="bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition">
+              <button className="bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition cursor-pointer">
                 Order Now
               </button>
-              <button className="border border-white px-6 py-3 rounded-lg hover:bg-white hover:text-orange-600 transition">
+              <button className="border border-white px-6 py-3 rounded-lg hover:bg-white hover:text-orange-600 transition cursor-pointer">
                 View Menu
               </button>
             </div>
@@ -109,7 +109,7 @@ const Home: React.FC = () => {
             >
               <h3 className="text-xl font-semibold mb-2">{food.name}</h3>
               <p className="text-orange-500 font-bold mb-4">{food.price}</p>
-              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg">
+              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg cursor-pointer">
                 Add to Cart
               </button>
             </div>
@@ -140,7 +140,7 @@ const Home: React.FC = () => {
         <p className="text-gray-600 mb-8">
           Download our app or order directly from the website.
         </p>
-        <button className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-3 rounded-lg font-semibold">
+        <button className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-3 rounded-lg font-semibold cursor-pointer">
           Get Started
         </button>
       </section>

@@ -184,7 +184,7 @@ const CheckoutPage: React.FC = () => {
                   </div>
 
                   <Button
-                    className="w-full text-lg"
+                    className="w-full text-lg cursor-pointer"
                     disabled={!paymentMethod || isPlacingOrder}
                   >
                     {isPlacingOrder ? "Processing..." : "Place Order"}
