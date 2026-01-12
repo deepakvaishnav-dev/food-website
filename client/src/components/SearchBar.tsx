@@ -37,7 +37,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ search, onSearchChange }) => {
         {/* Search Icon */}
         <Button
           onClick={handleSearchClick}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black cursor-pointer"
         >
           <Search size={18} />
         </Button>

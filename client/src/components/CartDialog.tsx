@@ -96,6 +96,7 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onOpenChange }) => {
                   onOpenChange(false);
                   navigate("/checkout");
                 }}
+                className="cursor-pointer"
               >
                 Checkout
               </Button>

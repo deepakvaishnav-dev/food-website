@@ -120,7 +120,7 @@ const Navbar = () => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="relative h-8 w-8 rounded-full"
+                      className="relative h-8 w-8 rounded-full cursor-pointer"
                     >
                       <Avatar>
                         <AvatarImage
@@ -143,7 +143,7 @@ const Navbar = () => {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                       Log out
                     </DropdownMenuItem>
                   </DropdownMenuContent>

@@ -38,7 +38,7 @@ const FoodList: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold  mb-8">Food Menu</h1>
 
-      <div className="flex gap-8 mb-8">
+      <div className="flex gap-8 mb-8 ">
         <SearchBar search={search} onSearchChange={handleSearchChange} />
 
         <SortControls

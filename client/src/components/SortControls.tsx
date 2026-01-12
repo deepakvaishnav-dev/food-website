@@ -29,7 +29,7 @@ const SortControls: React.FC<SortControlsProps> = ({
           value={priceSort}
           onValueChange={(value) => onSortChange(value, ratingSort)}
         >
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-32 cursor-pointer">
             <SelectValue placeholder="Default" />
           </SelectTrigger>
           <SelectContent>
@@ -46,7 +46,7 @@ const SortControls: React.FC<SortControlsProps> = ({
           value={ratingSort}
           onValueChange={(value) => onSortChange(priceSort, value)}
         >
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-32 cursor-pointer">
             <SelectValue placeholder="Default" />
           </SelectTrigger>
           <SelectContent>
@@ -57,7 +57,7 @@ const SortControls: React.FC<SortControlsProps> = ({
         </Select>
       </div>
 
-      <Button onClick={onClearSorts} variant="outline">
+      <Button onClick={onClearSorts} variant="outline" className="cursor-pointer">
         Clear Sorts
       </Button>
     </div>

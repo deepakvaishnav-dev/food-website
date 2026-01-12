@@ -1,7 +1,12 @@
 import React from "react";
 import Confetti from "react-confetti";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -74,9 +79,7 @@ const OrderSuccessPage: React.FC = () => {
 
               {/* ITEMS */}
               <div>
-                <h3 className="text-lg font-semibold mb-3">
-                  🍽 Ordered Items
-                </h3>
+                <h3 className="text-lg font-semibold mb-3">🍽 Ordered Items</h3>
 
                 <div className="space-y-2 text-sm">
                   {orderDetails.items.map((item, index) => (
@@ -90,9 +93,7 @@ const OrderSuccessPage: React.FC = () => {
                       <span>
                         {item.name} × {item.quantity}
                       </span>
-                      <span>
-                        ₹{(item.price * item.quantity).toFixed(2)}
-                      </span>
+                      <span>₹{(item.price * item.quantity).toFixed(2)}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -113,15 +114,20 @@ const OrderSuccessPage: React.FC = () => {
                 className="space-y-3"
               >
                 <Button
-                  className="w-full"
-                  onClick={() => navigate("/track-order")}
+                  className="w-full cursor-pointer"
+                  onClick={() =>
+                    window.open(
+                      "https://www.google.com/maps/search/food+restaurants+near+me",
+                      "_blank"
+                    )
+                  }
                 >
                   Track Order 🚴
                 </Button>
 
                 <Button
                   variant="outline"
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   onClick={() => navigate("/")}
                 >
                   Order More Food 🍕
