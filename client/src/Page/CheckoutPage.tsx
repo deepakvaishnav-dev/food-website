@@ -16,6 +16,7 @@ import {
 } from "../components/ui/dialog";
 import { useCart } from "../contexts/CartContext";
 import { useNavigate } from "react-router-dom";
+import StripeWrapper from "../components/StripeWrapper";
 
 const CheckoutPage: React.FC = () => {
   const { cart, totalPrice, clearCart } = useCart();
@@ -34,18 +35,25 @@ const CheckoutPage: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [paymentError, setPaymentError] = useState<string>("");
+  const [paymentIntentId, setPaymentIntentId] = useState<string>("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!paymentMethod) return;
+  const handlePaymentSuccess = async (paymentIntentId: string) => {
+    setPaymentIntentId(paymentIntentId);
+    await handleOrderPlacement();
+  };
 
-    setIsPlacingOrder(true);
+  const handlePaymentError = (error: string) => {
+    setPaymentError(error);
+    setIsPlacingOrder(false);
+  };
 
+  const handleOrderPlacement = async () => {
     const orderDetails = {
       orderId: `ORD${Date.now()}`,
       paymentMethod,
@@ -53,10 +61,10 @@ const CheckoutPage: React.FC = () => {
       items: cart,
       address: `${formData.houseFlatNo}, ${formData.areaStreet}, ${formData.city}`,
       deliveryTime: "30–40 mins",
+      paymentIntentId,
     };
 
     await clearCart();
-
     setIsDialogOpen(true);
 
     setTimeout(() => {
@@ -64,6 +72,24 @@ const CheckoutPage: React.FC = () => {
       setIsPlacingOrder(false);
       navigate("/order-success", { state: { orderDetails } });
     }, 2000);
+  };
+
+  const handleCashOnDelivery = async () => {
+    setIsPlacingOrder(true);
+    await handleOrderPlacement();
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.name &&
+      formData.phone &&
+      formData.houseFlatNo &&
+      formData.areaStreet &&
+      formData.city &&
+      formData.state &&
+      formData.pincode &&
+      paymentMethod
+    );
   };
 
   return (
@@ -85,7 +111,7 @@ const CheckoutPage: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <div className="min-h-screen  py-6">
+      <div className="min-h-screen py-6">
         <div className="container mx-auto px-4">
           <h1 className="text-2xl md:text-3xl font-bold mb-6">Checkout</h1>
 
@@ -96,110 +122,128 @@ const CheckoutPage: React.FC = () => {
                 <CardTitle>Delivery Details</CardTitle>
               </CardHeader>
 
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-5">
+              <CardContent className="space-y-5">
+                <Input
+                  name="name"
+                  placeholder="Full Name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+
+                <Input
+                  name="phone"
+                  placeholder="Phone Number"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                />
+
+                <Input
+                  name="houseFlatNo"
+                  placeholder="House / Flat No"
+                  value={formData.houseFlatNo}
+                  onChange={handleInputChange}
+                  required
+                />
+
+                <Input
+                  name="areaStreet"
+                  placeholder="Area / Street"
+                  value={formData.areaStreet}
+                  onChange={handleInputChange}
+                  required
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Input
-                    name="name"
-                    placeholder="Full Name"
-                    value={formData.name}
+                    name="city"
+                    placeholder="City"
+                    value={formData.city}
                     onChange={handleInputChange}
                     required
                   />
-
                   <Input
-                    name="phone"
-                    placeholder="Phone Number"
-                    value={formData.phone}
+                    name="state"
+                    placeholder="State"
+                    value={formData.state}
                     onChange={handleInputChange}
                     required
                   />
-
                   <Input
-                    name="houseFlatNo"
-                    placeholder="House / Flat No"
-                    value={formData.houseFlatNo}
+                    name="pincode"
+                    placeholder="Pincode"
+                    value={formData.pincode}
                     onChange={handleInputChange}
                     required
                   />
+                </div>
 
-                  <Input
-                    name="areaStreet"
-                    placeholder="Area / Street"
-                    value={formData.areaStreet}
-                    onChange={handleInputChange}
-                    required
-                  />
+                {/* PAYMENT SECTION */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg">
+                    Select Payment Method
+                  </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Input
-                      name="city"
-                      placeholder="City"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <Input
-                      name="state"
-                      placeholder="State"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <Input
-                      name="pincode"
-                      placeholder="Pincode"
-                      value={formData.pincode}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-
-                  {/* PAYMENT SECTION */}
-                  <div className="space-y-3">
-                    <h3 className="font-semibold text-lg">
-                      Select Payment Method
-                    </h3>
-
-                    <div
-                      className={`border rounded-lg p-3 cursor-pointer  ${
-                        paymentMethod === "Cash on Delivery"
-                          ? "border-green-500 "
-                          : ""
-                      }`}
-                      onClick={() => setPaymentMethod("Cash on Delivery")}
-                    >
-                      💵 Cash on Delivery
-                    </div>
-
-                    <div
-                      className={`border rounded-lg p-3 cursor-pointer ${
-                        paymentMethod === "Online Payment"
-                          ? "border-blue-500 "
-                          : ""
-                      }`}
-                      onClick={() => setPaymentMethod("Online Payment")}
-                    >
-                      💳 Online Payment (UPI / Card)
-                    </div>
-                  </div>
-
-                  <Button
-                    className="w-full text-lg cursor-pointer"
-                    disabled={!paymentMethod || isPlacingOrder}
+                  <div
+                    className={`border rounded-lg p-3 cursor-pointer ${
+                      paymentMethod === "Cash on Delivery"
+                        ? "border-green-500"
+                        : ""
+                    }`}
+                    onClick={() => setPaymentMethod("Cash on Delivery")}
                   >
-                    {isPlacingOrder ? "Processing..." : "Place Order"}
-                  </Button>
+                    💵 Cash on Delivery
+                  </div>
 
-                  {!paymentMethod && (
-                    <p className="text-xs text-red-500 text-center">
-                      Please select a payment method to continue
-                    </p>
+                  <div
+                    className={`border rounded-lg p-3 cursor-pointer ${
+                      paymentMethod === "Online Payment"
+                        ? "border-blue-500"
+                        : ""
+                    }`}
+                    onClick={() => setPaymentMethod("Online Payment")}
+                  >
+                    💳 Online Payment (UPI / Card)
+                  </div>
+
+                  {/* STRIPE PAYMENT FORM */}
+                  {paymentMethod === "Online Payment" && (
+                    <div className="mt-4">
+                      <StripeWrapper
+                        amount={totalPrice}
+                        onPaymentSuccess={handlePaymentSuccess}
+                        onPaymentError={handlePaymentError}
+                      />
+                      {paymentError && (
+                        <p className="text-xs text-red-500 mt-2">
+                          {paymentError}
+                        </p>
+                      )}
+                    </div>
                   )}
 
-                  <p className="text-xs text-gray-500 text-center">
-                    🔒 100% Secure Payments
+                  {/* CASH ON DELIVERY BUTTON */}
+                  {paymentMethod === "Cash on Delivery" && (
+                    <Button
+                      className="w-full text-lg cursor-pointer"
+                      onClick={handleCashOnDelivery}
+                      disabled={!isFormValid() || isPlacingOrder}
+                    >
+                      {isPlacingOrder ? "Processing..." : "Place Order"}
+                    </Button>
+                  )}
+                </div>
+
+                {!paymentMethod && (
+                  <p className="text-xs text-red-500 text-center">
+                    Please select a payment method to continue
                   </p>
-                </form>
+                )}
+
+                <p className="text-xs text-gray-500 text-center">
+                  🔒 100% Secure Payments
+                </p>
               </CardContent>
             </Card>
 
