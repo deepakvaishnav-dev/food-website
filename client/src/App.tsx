@@ -14,6 +14,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import Footer from "./Page/Footer";
 
+
 function App() {
   const handleSignUpClose = () => {};
 

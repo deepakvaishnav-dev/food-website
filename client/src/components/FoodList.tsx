@@ -6,6 +6,7 @@ import FoodGrid from "./FoodGrid";
 import PaginationControls from "./PaginationControls";
 
 
+
 const FoodList: React.FC = () => {
   const {
     foods,
@@ -36,6 +37,7 @@ const FoodList: React.FC = () => {
     );
 
   return (
+    
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold  mb-8">Food Menu</h1>
 

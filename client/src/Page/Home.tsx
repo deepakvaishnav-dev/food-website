@@ -1,9 +1,9 @@
 import React from "react";
+import FoodCategories from "./FoodCategories";
 
 const Home: React.FC = () => {
   return (
     <div className="w-full">
-  
       <section className="bg-linear-to-r from-orange-500 to-red-500 text-white">
         <div className="container mx-auto px-6 py-20 flex flex-col md:flex-row items-center gap-10">
           <div className="md:w-1/2 text-center md:text-left">
@@ -35,7 +35,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-    
       <section className="container mx-auto px-6 py-16">
         <h2 className="text-3xl font-bold text-center mb-12">Why Choose Us?</h2>
 
@@ -92,6 +91,9 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* FOOD CATEGORIES */}
+      <FoodCategories />
 
       {/* POPULAR DISHES */}
       <section className="container mx-auto px-6 py-16">
