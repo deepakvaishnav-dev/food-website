@@ -147,7 +147,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const clearCart = async () => {
     if (!token) return;
     setLoading(true);
-    setCart([]); // Clear local state immediately
+    setCart([]);
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/cart/clear`,
@@ -160,12 +160,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       if (!res.ok) {
         if (res.status === 401) logout();
         else console.error("Clear cart error:", data);
-        // Optionally refetch cart if clear failed
+        
         fetchCart();
       }
     } catch (err) {
       console.error("Failed to clear cart:", err);
-      // Optionally refetch cart if clear failed
+      
       fetchCart();
     } finally {
       setLoading(false);

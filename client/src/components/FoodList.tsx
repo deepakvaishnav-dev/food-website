@@ -5,8 +5,6 @@ import SortControls from "./SortControls";
 import FoodGrid from "./FoodGrid";
 import PaginationControls from "./PaginationControls";
 
-
-
 const FoodList: React.FC = () => {
   const {
     foods,
@@ -37,11 +35,10 @@ const FoodList: React.FC = () => {
     );
 
   return (
-    
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold  mb-8">Food Menu</h1>
 
-      <div className="flex gap-8 mb-8 ">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-8 mb-8">
         <SearchBar search={search} onSearchChange={handleSearchChange} />
 
         <SortControls
@@ -65,8 +62,6 @@ const FoodList: React.FC = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
-
-      
     </div>
   );
 };

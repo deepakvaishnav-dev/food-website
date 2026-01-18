@@ -22,7 +22,7 @@ const SortControls: React.FC<SortControlsProps> = ({
   onClearSorts,
 }) => {
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
       <div className="flex items-center gap-2">
         <label className="text-sm font-medium">Sort by Price:</label>
         <Select
@@ -33,9 +33,15 @@ const SortControls: React.FC<SortControlsProps> = ({
             <SelectValue placeholder="Default" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="default" className="cursor-pointer">Default</SelectItem>
-            <SelectItem value="high-to-low" className="cursor-pointer">High to Low</SelectItem>
-            <SelectItem value="low-to-high" className="cursor-pointer">Low to High</SelectItem>
+            <SelectItem value="default" className="cursor-pointer">
+              Default
+            </SelectItem>
+            <SelectItem value="high-to-low" className="cursor-pointer">
+              High to Low
+            </SelectItem>
+            <SelectItem value="low-to-high" className="cursor-pointer">
+              Low to High
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -50,14 +56,24 @@ const SortControls: React.FC<SortControlsProps> = ({
             <SelectValue placeholder="Default" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="default" className="cursor-pointer" >Default</SelectItem>
-            <SelectItem value="high-to-low" className="cursor-pointer">High to Low</SelectItem>
-            <SelectItem value="low-to-high"className="cursor-pointer">Low to High</SelectItem>
+            <SelectItem value="default" className="cursor-pointer">
+              Default
+            </SelectItem>
+            <SelectItem value="high-to-low" className="cursor-pointer">
+              High to Low
+            </SelectItem>
+            <SelectItem value="low-to-high" className="cursor-pointer">
+              Low to High
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <Button onClick={onClearSorts} variant="outline" className="cursor-pointer">
+      <Button
+        onClick={onClearSorts}
+        variant="outline"
+        className="cursor-pointer"
+      >
         Clear Sorts
       </Button>
     </div>

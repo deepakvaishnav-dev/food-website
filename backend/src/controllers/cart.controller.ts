@@ -1,12 +1,16 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import { Cart, ICartItem } from "../models/cart.model";
 
 export const getCart = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
-    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    if (!userId || typeof userId !== "string")
+      return res.status(401).json({ message: "Unauthorized" });
 
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
     if (!cart) {
       return res.json({ items: [], totalPrice: 0 });
     }
@@ -23,7 +27,8 @@ export const getCart = async (req: Request, res: Response) => {
 export const addToCart = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
-    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    if (!userId || typeof userId !== "string")
+      return res.status(401).json({ message: "Unauthorized" });
 
     const { foodId, name, price, quantity, image } = req.body;
 
@@ -35,16 +40,30 @@ export const addToCart = async (req: Request, res: Response) => {
     const qty = quantity && quantity > 0 ? quantity : 1;
 
     // Find cart or create new
-    let cart = await Cart.findOne({ userId });
-    if (!cart) cart = new Cart({ userId, items: [] });
+    let cart = await Cart.findOne({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
+    if (!cart)
+      cart = new Cart({
+        userId: new mongoose.Types.ObjectId(userId),
+        items: [],
+      });
 
     // Check if item exists
-    const existingItem = cart.items.find((item) => item.foodId === foodId);
+    const existingItem = cart.items.find(
+      (item) => item.foodId.toString() === foodId,
+    );
 
     if (existingItem) {
       existingItem.quantity += qty;
     } else {
-      cart.items.push({ foodId, name, price, quantity: qty, image });
+      cart.items.push({
+        foodId: new mongoose.Types.ObjectId(foodId),
+        name,
+        price,
+        quantity: qty,
+        image,
+      });
     }
 
     // Save cart (pre-save hook updates totalPrice)
@@ -62,7 +81,8 @@ export const addToCart = async (req: Request, res: Response) => {
 export const updateCartItem = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
-    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    if (!userId || typeof userId !== "string")
+      return res.status(401).json({ message: "Unauthorized" });
 
     const { foodId, quantity } = req.body;
 
@@ -70,10 +90,12 @@ export const updateCartItem = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid foodId or quantity" });
     }
 
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    const item = cart.items.find((item) => item.foodId === foodId);
+    const item = cart.items.find((item) => item.foodId.toString() === foodId);
     if (!item)
       return res.status(404).json({ message: "Item not found in cart" });
 
@@ -92,14 +114,17 @@ export const updateCartItem = async (req: Request, res: Response) => {
 export const removeFromCart = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
-    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    if (!userId || typeof userId !== "string")
+      return res.status(401).json({ message: "Unauthorized" });
 
     const { foodId } = req.params;
 
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    cart.items = cart.items.filter((item) => item.foodId !== foodId);
+    cart.items = cart.items.filter((item) => item.foodId.toString() !== foodId);
     await cart.save();
 
     res.json({ items: cart.items, totalPrice: cart.totalPrice });
@@ -114,9 +139,12 @@ export const removeFromCart = async (req: Request, res: Response) => {
 export const clearCart = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
-    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    if (!userId || typeof userId !== "string")
+      return res.status(401).json({ message: "Unauthorized" });
 
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
     cart.items = [];

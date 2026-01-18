@@ -1,7 +1,6 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-interface IFood extends Document {
-  // _id: string;
+export interface IFood extends Document {
   name: string;
   type: "veg" | "non-veg";
   price: number;
@@ -12,16 +11,55 @@ interface IFood extends Document {
   rating: number;
 }
 
-const foodSchema = new mongoose.Schema<IFood>({
-  _id: String,
-  name: String,
-  type: { type: String, enum: ["veg", "non-veg"] },
-  price: Number,
-  weight: String,
-  image: String,
-  description: String,
-  isAvailable: Boolean,
-  rating: Number
-});
+const foodSchema = new Schema<IFood>(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-export  const Food = mongoose.model<IFood>("Food", foodSchema);
+    type: {
+      type: String,
+      enum: ["veg", "non-veg"],
+      required: true,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+
+    weight: {
+      type: String,
+      required: true,
+    },
+
+    image: {
+      type: String,
+      required: true,
+    },
+
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    isAvailable: {
+      type: Boolean,
+      default: true,
+    },
+
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
+    },
+  },
+  { timestamps: true }
+);
+
+export const Food = mongoose.model<IFood>("Food", foodSchema);

@@ -39,7 +39,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ search, onSearchChange }) => {
           onClick={handleSearchClick}
           className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black cursor-pointer"
         >
-          <Search size={18} />
+          <Search size={16} />
         </Button>
       </div>
     </div>

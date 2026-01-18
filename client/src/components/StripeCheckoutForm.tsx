@@ -31,7 +31,7 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
     setIsProcessing(true);
 
     try {
-      // Create payment intent
+      
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/payment/create-payment-intent`,
         { amount },
@@ -44,7 +44,7 @@ const StripeCheckoutForm: React.FC<StripeCheckoutFormProps> = ({
 
       const { clientSecret } = data;
 
-      // Confirm payment
+      
       const cardElement = elements.getElement(CardElement) as StripeCardElement;
       if (!cardElement) {
         throw new Error("Card element not found");

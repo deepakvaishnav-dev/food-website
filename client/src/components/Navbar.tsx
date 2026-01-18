@@ -9,7 +9,7 @@ import { Button } from "./ui/button";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Menu, X } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import CartDialog from "./CartDialog";
 import { useState } from "react";
@@ -29,6 +29,7 @@ const Navbar = () => {
   const { isLoggedIn, logout, user } = useAuth();
   const { cart } = useCart();
   const [cartDialogOpen, setCartDialogOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleClick = (section: string) => {
     if (section === "login") navigate("/login");
@@ -47,58 +48,39 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center justify-center gap-2 text-lg font-bold"
+            className="flex items-center gap-2 text-lg font-bold"
           >
             <img
               src={logo}
-              alt=""
-              className="h-20 w-15 object-contain rounded-2xl"
-            />{" "}
-            HaldiramFood
+              alt="Haldiram Logo"
+              className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded-2xl"
+            />
+            <span className="hidden sm:inline text-foreground">HaldiramFood</span>
           </Link>
-          {/* Menu */}
-          <div className="flex items-center space-x-6">
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-4">
             <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/"
-                      className="px-3 py-2 rounded-md text-sm font-medium 
-                      text-foreground hover:bg-accent hover:text-accent-foreground"
-                    >
-                      Home
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/about"
-                      className="px-3 py-2 rounded-md text-sm font-medium
-                      text-foreground hover:bg-accent hover:text-accent-foreground"
-                    >
-                      About
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/contact"
-                      className="px-3 py-2 rounded-md text-sm font-medium
-                    text-foreground hover:bg-accent hover:text-accent-foreground"
-                    >
-                      Contact
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
+              <NavigationMenuList className="flex flex-row space-x-2">
+                {["Home", "About", "Contact"].map((section) => (
+                  <NavigationMenuItem key={section}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        to={`/${section.toLowerCase()}`}
+                        className="px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
+                      >
+                        {section}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
               </NavigationMenuList>
             </NavigationMenu>
+          </div>
 
-            {/* Cart Icon */}
+          {/* Right icons */}
+          <div className="flex items-center gap-2">
+            {/* Cart */}
             {isLoggedIn && (
               <div className="relative">
                 <ShoppingCart
@@ -113,60 +95,78 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* Auth Buttons */}
-            <div className="flex items-center gap-2">
-              {isLoggedIn && user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="relative h-8 w-8 rounded-full cursor-pointer"
-                    >
-                      <Avatar>
-                        <AvatarImage
-                          src="https://github.com/shadcn.png"
-                          alt="@shadcn"
-                        />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {user.name}
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {user.email}
-                        </p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-                      Log out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <>
+            {/* Profile */}
+            {isLoggedIn && user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button
-                    variant="outline"
-                    onClick={() => handleClick("login")}
-                    className="cursor-pointer"
+                    variant="ghost"
+                    className="h-8 w-8 rounded-full"
                   >
-                    Login
+                    <Avatar>
+                      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
                   </Button>
-                  <Button onClick={() => handleClick("signup")} className="cursor-pointer">Sign Up</Button>
-                </>
-              )}
-            </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="hidden md:flex items-center gap-2">
+                <Button variant="outline" onClick={() => handleClick("login")}>Login</Button>
+                <Button onClick={() => handleClick("signup")}>Sign Up</Button>
+              </div>
+            )}
 
-            {/* Theme Toggle */}
+            {/* Theme toggle */}
             <ModeToggle />
+
+            {/* Mobile Hamburger */}
+            <div className="md:hidden">
+              <Button
+                variant="ghost"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2"
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden px-4 pt-2 pb-4 space-y-1 bg-background border-t">
+          {["Home", "About", "Contact"].map((section) => (
+            <Link
+              key={section}
+              to={`/${section.toLowerCase()}`}
+              className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {section}
+            </Link>
+          ))}
+
+          {!isLoggedIn && (
+            <div className="flex flex-col gap-2 mt-2">
+              <Button variant="outline" onClick={() => handleClick("login")}>Login</Button>
+              <Button onClick={() => handleClick("signup")}>Sign Up</Button>
+            </div>
+          )}
+        </div>
+      )}
+
       <CartDialog open={cartDialogOpen} onOpenChange={setCartDialogOpen} />
     </nav>
   );

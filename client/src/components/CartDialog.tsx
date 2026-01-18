@@ -41,7 +41,7 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onOpenChange }) => {
                 key={item.foodId}
                 className="flex items-center justify-between"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 ">
                   <img
                     src={item.image}
                     alt={item.name}
@@ -49,12 +49,12 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onOpenChange }) => {
                   />
                   <div>
                     <p className="font-medium">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground cursor-pointer">
                       ₹{item.price} x {item.quantity}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 cursor-pointer">
                   <Button
                     variant="outline"
                     size="sm"
@@ -72,6 +72,7 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onOpenChange }) => {
                     onClick={() =>
                       updateQuantity(item.foodId, item.quantity + 1)
                     }
+                    className="cursor-pointer"
                   >
                     +
                   </Button>
@@ -79,6 +80,7 @@ const CartDialog: React.FC<CartDialogProps> = ({ open, onOpenChange }) => {
                     variant="destructive"
                     size="sm"
                     onClick={() => removeFromCart(item.foodId)}
+                    className="cursor-pointer"
                   >
                     Remove
                   </Button>

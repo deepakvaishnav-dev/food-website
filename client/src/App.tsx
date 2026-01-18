@@ -13,7 +13,8 @@ import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import Footer from "./Page/Footer";
-
+import AdminLogin from "@/Page/AdminLogin";
+import AdminDashboard from "@/Page/AdminDashboard";
 
 function App() {
   const handleSignUpClose = () => {};
@@ -35,6 +36,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/order-success" element={<OrderSuccessPage />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
         <Toaster />
         <Footer />

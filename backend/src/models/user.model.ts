@@ -5,6 +5,8 @@ interface IUser extends Document {
   password?: string;
   googleId?: string;
   name?: string;
+  isAdmin: boolean;
+  isBlocked: boolean;
 }
 
 const userSchema: Schema = new Schema({
@@ -24,6 +26,14 @@ const userSchema: Schema = new Schema({
   name: {
     type: String,
     required: false,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  isBlocked: {
+    type: Boolean,
+    default: false,
   },
 });
 
